@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  mysql:
+    environment:
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_DATABASE: database
+    volumes:
+      - ./database:/var/lib/mysql
+    image: mysql:5.6
+    ports:
+      - 3306:3306
+
+  server:
+    build: ../server
+    environment: 
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: database
+      APP_KEY: "test"
+    ports:
+      - 3000:3001
+
+  client:
+    build: ../client
+    environment:
+      SERVER_HOST: server:3000
+    ports:
+      - 80:80
